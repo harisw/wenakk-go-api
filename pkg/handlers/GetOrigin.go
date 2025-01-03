@@ -5,31 +5,32 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/harisw/wenakkGoApi/pkg/models"
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
-func (h handler) GetAllOrigins(w http.ResponseWriter, r *http.Request) {
+func (h handler) GetOrigin(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	slug := vars["slug"]
 
-	results, err := h.DB.Query(queries.GetAllOrigins)
+	result, err := h.DB.Query(queries.GetOriginBySlug, slug)
 	if err != nil {
-		log.Println("Error querying origins ", err)
+		log.Println("Error querying origin ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	var origins = make([]models.Origin, 0)
-	for results.Next() {
-		var origin models.Origin
-		err = results.Scan(&origin.Id, &origin.Name, &origin.Slug)
+	var origin models.Origin
+	for result.Next() {
+		err = result.Scan(&origin.Id, &origin.Name, &origin.Slug)
 		if err != nil {
 			log.Println("failed to scan", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		origins = append(origins, origin)
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(origins)
+	json.NewEncoder(w).Encode(origin)
 }

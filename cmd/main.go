@@ -21,8 +21,11 @@ func handleRequest(DB *sql.DB) {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/origins", h.GetAllOrigins).Methods("GET")
+	myRouter.HandleFunc("/origins/{slug}", h.GetOrigin).Methods("GET")
 	myRouter.HandleFunc("/categories", h.GetAllCategories).Methods("GET")
+	myRouter.HandleFunc("/categories/{slug}", h.GetCategory).Methods("GET")
 	myRouter.HandleFunc("/recipes", h.GetAllRecipes).Methods("GET")
+	myRouter.HandleFunc("/recipes/{recipeId}", h.GetRecipe).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
 

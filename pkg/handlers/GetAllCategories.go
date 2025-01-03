@@ -6,11 +6,12 @@ import (
 	"net/http"
 
 	"github.com/harisw/wenakkGoApi/pkg/models"
+	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
 func (h handler) GetAllCategories(w http.ResponseWriter, r *http.Request) {
 
-	results, err := h.DB.Query("SELECT * FROM categories;")
+	results, err := h.DB.Query(queries.GetAllCategories)
 	if err != nil {
 		log.Println("Error querying categories ", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -20,7 +21,7 @@ func (h handler) GetAllCategories(w http.ResponseWriter, r *http.Request) {
 	var categories = make([]models.Category, 0)
 	for results.Next() {
 		var category models.Category
-		err = results.Scan(&category.Id, &category.Name, &category.Slug)
+		err = results.Scan(&category.Id, &category.Name, &category.Img, &category.Slug)
 		if err != nil {
 			log.Println("failed to scan", err)
 			w.WriteHeader(http.StatusInternalServerError)
