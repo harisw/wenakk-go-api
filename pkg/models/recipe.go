@@ -8,8 +8,8 @@ import (
 
 type Recipe struct {
 	Id            int64           `json:"Id"`
-	CategoryId    int64           `json:"CategoryId"`
-	OriginId      int64           `json:"OriginId"`
+	Category      Category        `json:"Category"`
+	Origin        Origin          `json:"Origin"`
 	Name          string          `json:"Name"`
 	TotalTime     string          `json:"Total_time"`
 	DatePublished time.Time       `json:"Date_published"`

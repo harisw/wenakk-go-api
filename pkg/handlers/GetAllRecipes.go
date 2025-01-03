@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/harisw/wenakkGoApi/pkg/models"
+	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
 func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
@@ -36,8 +37,7 @@ func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	offset := page * limit
 	log.Println("offset", offset)
 	log.Println("limit", limit)
-	queryStmt := "SELECT * FROM recipes limit $1 offset $2;"
-	results, err := h.DB.Query(queryStmt, limit, offset)
+	results, err := h.DB.Query(queries.GetRecipesWithRelations, limit, offset)
 	if err != nil {
 		log.Println("Error querying recipes ", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -46,7 +46,8 @@ func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	var recipes = make([]models.Recipe, 0)
 	for results.Next() {
 		var recipe models.Recipe
-		err = results.Scan(&recipe.Id, &recipe.CategoryId, &recipe.OriginId,
+		err = results.Scan(&recipe.Id, &recipe.Category.Name, &recipe.Category.Slug,
+			&recipe.Origin.Name, &recipe.Origin.Slug,
 			&recipe.Name, &recipe.TotalTime, &recipe.DatePublished, &recipe.Description,
 			&recipe.Images, &recipe.Keywords, &recipe.Rating, &recipe.Calories,
 			&recipe.Protein, &recipe.RecipeYield, &recipe.Instructions, &recipe.RecipeId,
