@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/harisw/wenakkGoApi/pkg/db"
+	"github.com/harisw/wenakkGoApi/pkg/handlers"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -16,8 +17,12 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleRequest(DB *sql.DB) {
+	h := handlers.New(DB)
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
+	myRouter.HandleFunc("/origins", h.GetAllOrigins).Methods("GET")
+	myRouter.HandleFunc("/categories", h.GetAllCategories).Methods("GET")
+	myRouter.HandleFunc("/recipes", h.GetAllRecipes).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
 
