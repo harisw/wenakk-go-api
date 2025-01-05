@@ -35,8 +35,6 @@ func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	offset := page * limit
-	log.Println("offset", offset)
-	log.Println("limit", limit)
 	results, err := h.DB.Query(queries.GetRecipesWithRelations, limit, offset)
 	if err != nil {
 		log.Println("Error querying recipes ", err)
