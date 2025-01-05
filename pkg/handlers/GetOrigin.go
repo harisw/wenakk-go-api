@@ -10,6 +10,15 @@ import (
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
+// GetOrigin godoc
+// @Summary Get origin by slug
+// @Description Get origin by slug
+// @Tags origins
+// @Accept  json
+// @Produce  json
+// @Param slug path string true "Origin Slug"
+// @Success 200 {object} models.Origin
+// @Router /origins/{slug} [get]
 func (h handler) GetOrigin(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	slug := vars["slug"]

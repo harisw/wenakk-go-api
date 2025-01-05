@@ -1,7 +1,6 @@
 package models
 
 import (
-	"database/sql"
 	"encoding/json"
 	"time"
 )
@@ -14,13 +13,13 @@ type Recipe struct {
 	TotalTime     string          `json:"Total_time"`
 	DatePublished time.Time       `json:"Date_published"`
 	Description   string          `json:"Description"`
-	Images        json.RawMessage `json:"Images"`
-	Keywords      json.RawMessage `json:"Keywords"`
+	Images        json.RawMessage `json:"Images" swaggertype:"string" example:"{\"key\":\"value\"}"`
+	Keywords      json.RawMessage `json:"Keywords" swaggertype:"string" example:"{\"key\":\"value\"}"`
 	Rating        float32         `json:"Rating"`
 	Calories      float32         `json:"Calories"`
 	Protein       float32         `json:"Protein"`
-	RecipeYield   sql.NullString  `json:"Recipe_yield"` // Changed to pointer to accept null value
-	Instructions  json.RawMessage `json:"Instructions"`
+	RecipeYield   *string         `json:"Recipe_yield"`
+	Instructions  json.RawMessage `json:"Instructions" swaggertype:"string" example:"{\"key\":\"value\"}"`
 	RecipeId      int64           `json:"Recipe_id"`
-	Ingredients   sql.NullString  `json:"Ingredients"`
+	Ingredients   *string         `json:"Ingredients"`
 }

@@ -1,0 +1,197 @@
+basePath: /
+definitions:
+  models.Category:
+    properties:
+      Img:
+        type: string
+      Name:
+        type: string
+      Slug:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.Origin:
+    properties:
+      Id:
+        type: integer
+      Name:
+        type: string
+      Slug:
+        type: string
+    type: object
+  models.Recipe:
+    properties:
+      Calories:
+        type: number
+      Category:
+        $ref: '#/definitions/models.Category'
+      Date_published:
+        type: string
+      Description:
+        type: string
+      Id:
+        type: integer
+      Images:
+        example: '{"key":"value"}'
+        type: string
+      Ingredients:
+        type: string
+      Instructions:
+        example: '{"key":"value"}'
+        type: string
+      Keywords:
+        example: '{"key":"value"}'
+        type: string
+      Name:
+        type: string
+      Origin:
+        $ref: '#/definitions/models.Origin'
+      Protein:
+        type: number
+      Rating:
+        type: number
+      Recipe_id:
+        type: integer
+      Recipe_yield:
+        type: string
+      Total_time:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: haristw16@gmail.com
+    name: Hari Setiawan
+  description: This is API Documentation for Wenakk API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Wenakk API
+  version: "1.0"
+paths:
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Get all categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+      summary: Get all categories
+      tags:
+      - categories
+  /categories/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Get category by slug
+      parameters:
+      - description: Category Slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+      summary: Get category by slug
+      tags:
+      - categories
+  /origins:
+    get:
+      consumes:
+      - application/json
+      description: Get all origins
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Origin'
+            type: array
+      summary: Get all origins
+      tags:
+      - origins
+  /origins/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Get origin by slug
+      parameters:
+      - description: Origin Slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Origin'
+      summary: Get origin by slug
+      tags:
+      - origins
+  /recipes:
+    get:
+      consumes:
+      - application/json
+      description: Get all recipes
+      parameters:
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Recipe'
+            type: array
+      summary: Get all recipes
+      tags:
+      - recipes
+  /recipes/{recipeId}:
+    get:
+      consumes:
+      - application/json
+      description: Get recipe by id
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Recipe'
+      summary: Get recipe by id
+      tags:
+      - recipes
+swagger: "2.0"

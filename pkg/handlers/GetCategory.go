@@ -10,6 +10,15 @@ import (
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
+// GetCategory godoc
+// @Summary Get category by slug
+// @Description Get category by slug
+// @Tags categories
+// @Accept  json
+// @Produce  json
+// @Param slug path string true "Category Slug"
+// @Success 200 {object} models.Category
+// @Router /categories/{slug} [get]
 func (h handler) GetCategory(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	slug := vars["slug"]

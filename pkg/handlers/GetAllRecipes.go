@@ -10,6 +10,16 @@ import (
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
+// GetAllRecipes godoc
+// @Summary Get all recipes
+// @Description Get all recipes
+// @Tags recipes
+// @Accept  json
+// @Produce  json
+// @Param page query int false "Page"
+// @Param limit query int false "Limit"
+// @Success 200 {array} models.Recipe
+// @Router /recipes [get]
 func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	pageStr := r.URL.Query().Get("page")
 	if pageStr == "" {

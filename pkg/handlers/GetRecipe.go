@@ -10,6 +10,15 @@ import (
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
+// GetRecipe godoc
+// @Summary Get recipe by id
+// @Description Get recipe by id
+// @Tags recipes
+// @Accept  json
+// @Produce  json
+// @Param recipeId path string true "Recipe ID"
+// @Success 200 {object} models.Recipe
+// @Router /recipes/{recipeId} [get]
 func (h handler) GetRecipe(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	recipeId := vars["recipeId"]

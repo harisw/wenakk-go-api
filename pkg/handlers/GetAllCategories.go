@@ -9,6 +9,14 @@ import (
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
+// GetAllCategories godoc
+// @Summary Get all categories
+// @Description Get all categories
+// @Tags categories
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} models.Category
+// @Router /categories [get]
 func (h handler) GetAllCategories(w http.ResponseWriter, r *http.Request) {
 
 	results, err := h.DB.Query(queries.GetAllCategories)

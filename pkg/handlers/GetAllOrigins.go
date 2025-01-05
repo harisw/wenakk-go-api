@@ -9,6 +9,14 @@ import (
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
 
+// GetAllOrigins godoc
+// @Summary Get all origins
+// @Description Get all origins
+// @Tags origins
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} models.Origin
+// @Router /origins [get]
 func (h handler) GetAllOrigins(w http.ResponseWriter, r *http.Request) {
 
 	results, err := h.DB.Query(queries.GetAllOrigins)
