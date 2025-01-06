@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 
+	"github.com/harisw/wenakkGoApi/pkg/middlewares"
 	"github.com/harisw/wenakkGoApi/pkg/models"
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
@@ -21,29 +21,16 @@ import (
 // @Success 200 {array} models.Recipe
 // @Router /recipes [get]
 func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
-	pageStr := r.URL.Query().Get("page")
-	if pageStr == "" {
-		pageStr = "0"
-	}
-	limitStr := r.URL.Query().Get("limit")
-	if limitStr == "" {
-		limitStr = "30"
-	}
 
-	page, err := strconv.Atoi(pageStr)
-	if err != nil {
-		log.Println("failed to convert page to int", err)
-		w.WriteHeader(http.StatusBadRequest)
+	pagination, ok := r.Context().Value("pagination").(middlewares.Pagination)
+	if !ok {
+		log.Println("Failed to retrieve pagination from middleware")
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		log.Println("failed to convert limit to int", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
+	page := pagination.Page
+	limit := pagination.Limit
 	offset := page * limit
 	results, err := h.DB.Query(queries.GetRecipesWithRelations, limit, offset)
 	if err != nil {

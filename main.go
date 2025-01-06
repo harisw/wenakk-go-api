@@ -10,12 +10,14 @@ import (
 	_ "github.com/harisw/wenakkGoApi/docs"
 	"github.com/harisw/wenakkGoApi/pkg/db"
 	"github.com/harisw/wenakkGoApi/pkg/handlers"
+	"github.com/harisw/wenakkGoApi/pkg/middlewares"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func handleRequest(DB *sql.DB) {
 	h := handlers.New(DB)
 	router := mux.NewRouter().StrictSlash(true)
+	router.Use(middlewares.PaginationMiddleware)
 	router.HandleFunc("/", homePage)
 	router.HandleFunc("/origins", h.GetAllOrigins).Methods("GET")
 	router.HandleFunc("/origins/{slug}", h.GetOrigin).Methods("GET")
@@ -24,9 +26,6 @@ func handleRequest(DB *sql.DB) {
 	router.HandleFunc("/recipes", h.GetAllRecipes).Methods("GET")
 	router.HandleFunc("/recipes/{recipeId}", h.GetRecipe).Methods("GET")
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
-	// router.HandleFunc("/swagger/*", httpSwagger.Handler(
-	// 	httpSwagger.URL("http://localhost:1323/swagger/doc.json"), //The url pointing to API definition
-	// ))
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
@@ -41,8 +40,8 @@ func handleRequest(DB *sql.DB) {
 //	@license.name	Apache 2.0
 //	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
-//	@host		localhost:8080
-//	@BasePath	/
+// @host		localhost:8080
+// @BasePath	/
 func main() {
 	DB := db.Connect()
 	handleRequest(DB)
