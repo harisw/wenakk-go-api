@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/harisw/wenakkGoApi/pkg/helpers"
 	"github.com/harisw/wenakkGoApi/pkg/models"
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
@@ -39,7 +39,5 @@ func (h handler) GetOrigin(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(origin)
+	helpers.RespondJSON(w, http.StatusOK, origin)
 }

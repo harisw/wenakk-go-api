@@ -7,8 +7,9 @@ import (
 )
 
 type Pagination struct {
-	Page  int
-	Limit int
+	Page   int
+	Limit  int
+	Offset int
 }
 
 func PaginationMiddleware(next http.Handler) http.Handler {
@@ -29,7 +30,11 @@ func PaginationMiddleware(next http.Handler) http.Handler {
 			}
 		}
 
-		pagination := Pagination{Page: page, Limit: limit}
+		pagination := Pagination{
+			Page:   page,
+			Limit:  limit,
+			Offset: page * limit,
+		}
 		ctx := context.WithValue(r.Context(), "pagination", pagination)
 
 		next.ServeHTTP(w, r.WithContext(ctx))

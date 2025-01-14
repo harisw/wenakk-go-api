@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/harisw/wenakkGoApi/pkg/helpers"
 	"github.com/harisw/wenakkGoApi/pkg/models"
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
@@ -37,7 +37,5 @@ func (h handler) GetAllCategories(w http.ResponseWriter, r *http.Request) {
 		}
 		categories = append(categories, category)
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(categories)
+	helpers.RespondJSON(w, http.StatusOK, categories)
 }

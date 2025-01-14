@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/harisw/wenakkGoApi/pkg/helpers"
 	"github.com/harisw/wenakkGoApi/pkg/middlewares"
 	"github.com/harisw/wenakkGoApi/pkg/models"
 	"github.com/harisw/wenakkGoApi/pkg/queries"
@@ -29,9 +29,9 @@ func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	page := pagination.Page
 	limit := pagination.Limit
-	offset := page * limit
+	offset := pagination.Offset
+
 	results, err := h.DB.Query(queries.GetRecipesWithRelations, limit, offset)
 	if err != nil {
 		log.Println("Error querying recipes ", err)
@@ -54,8 +54,5 @@ func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 		}
 		recipes = append(recipes, recipe)
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(recipes)
+	helpers.RespondJSON(w, http.StatusOK, recipes)
 }

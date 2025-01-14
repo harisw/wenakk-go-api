@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/harisw/wenakkGoApi/pkg/helpers"
 	"github.com/harisw/wenakkGoApi/pkg/middlewares"
 	"github.com/harisw/wenakkGoApi/pkg/models"
 	"github.com/harisw/wenakkGoApi/pkg/queries"
@@ -37,9 +37,8 @@ func (h handler) GetRecipesByOrigin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	page := pagination.Page
 	limit := pagination.Limit
-	offset := page * limit
+	offset := pagination.Offset
 
 	result, err := h.DB.Query(queries.GetOriginBySlug, originSlug)
 	if err != nil {
@@ -82,7 +81,5 @@ func (h handler) GetRecipesByOrigin(w http.ResponseWriter, r *http.Request) {
 		Origin:  origin,
 		Recipes: recipes,
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	helpers.RespondJSON(w, http.StatusOK, response)
 }

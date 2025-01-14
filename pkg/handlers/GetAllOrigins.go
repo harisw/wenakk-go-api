@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/harisw/wenakkGoApi/pkg/helpers"
 	"github.com/harisw/wenakkGoApi/pkg/models"
 	"github.com/harisw/wenakkGoApi/pkg/queries"
 )
@@ -37,7 +37,5 @@ func (h handler) GetAllOrigins(w http.ResponseWriter, r *http.Request) {
 		}
 		origins = append(origins, origin)
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(origins)
+	helpers.RespondJSON(w, http.StatusOK, origins)
 }
