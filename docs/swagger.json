@@ -173,6 +173,50 @@
                 }
             }
         },
+        "/recipes/origin/{slug}": {
+            "get": {
+                "description": "Get all recipes paginated by its origin",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "recipes"
+                ],
+                "summary": "Get all recipes by Origins",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Origin Slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/recipes/{recipeId}": {
             "get": {
                 "description": "Get recipe by id",
@@ -207,6 +251,20 @@
         }
     },
     "definitions": {
+        "handlers.Response": {
+            "type": "object",
+            "properties": {
+                "origin": {
+                    "$ref": "#/definitions/models.Origin"
+                },
+                "recipes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Recipe"
+                    }
+                }
+            }
+        },
         "models.Category": {
             "type": "object",
             "properties": {

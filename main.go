@@ -24,6 +24,7 @@ func handleRequest(DB *sql.DB) {
 	router.HandleFunc("/categories", h.GetAllCategories).Methods("GET")
 	router.HandleFunc("/categories/{slug}", h.GetCategory).Methods("GET")
 	router.HandleFunc("/recipes", h.GetAllRecipes).Methods("GET")
+	router.HandleFunc("/recipes/origin/{slug}", h.GetRecipesByOrigin).Methods("GET")
 	router.HandleFunc("/recipes/{recipeId}", h.GetRecipe).Methods("GET")
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 	log.Fatal(http.ListenAndServe(":8080", router))

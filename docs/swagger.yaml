@@ -1,5 +1,14 @@
 basePath: /
 definitions:
+  handlers.Response:
+    properties:
+      origin:
+        $ref: '#/definitions/models.Origin'
+      recipes:
+        items:
+          $ref: '#/definitions/models.Recipe'
+        type: array
+    type: object
   models.Category:
     properties:
       Img:
@@ -192,6 +201,35 @@ paths:
           schema:
             $ref: '#/definitions/models.Recipe'
       summary: Get recipe by id
+      tags:
+      - recipes
+  /recipes/origin/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Get all recipes paginated by its origin
+      parameters:
+      - description: Origin Slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Get all recipes by Origins
       tags:
       - recipes
 swagger: "2.0"
