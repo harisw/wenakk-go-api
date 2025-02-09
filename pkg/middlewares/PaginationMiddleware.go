@@ -4,12 +4,14 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type Pagination struct {
-	Page   int
-	Limit  int
-	Offset int
+	Page    int
+	Limit   int
+	Offset  int
+	OrderBy string
 }
 
 func PaginationMiddleware(next http.Handler) http.Handler {
@@ -17,6 +19,7 @@ func PaginationMiddleware(next http.Handler) http.Handler {
 
 		page := 1
 		limit := 30
+		orderBy := "id DESC"
 
 		if p := r.URL.Query().Get("page"); p != "" {
 			if pInt, err := strconv.Atoi(p); err == nil && pInt > 0 {
@@ -30,10 +33,15 @@ func PaginationMiddleware(next http.Handler) http.Handler {
 			}
 		}
 
+		if o := r.URL.Query().Get("orderBy"); o != "" && strings.Contains(o, "_") {
+			orderBy = strings.Replace(o, "_", " ", -1)
+		}
+
 		pagination := Pagination{
-			Page:   page,
-			Limit:  limit,
-			Offset: page * limit,
+			Page:    page,
+			Limit:   limit,
+			Offset:  page * limit,
+			OrderBy: orderBy,
 		}
 		ctx := context.WithValue(r.Context(), "pagination", pagination)
 

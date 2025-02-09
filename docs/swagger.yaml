@@ -1,14 +1,5 @@
 basePath: /
 definitions:
-  handlers.Response:
-    properties:
-      origin:
-        $ref: '#/definitions/models.Origin'
-      recipes:
-        items:
-          $ref: '#/definitions/models.Recipe'
-        type: array
-    type: object
   models.Category:
     properties:
       Img:
@@ -66,6 +57,24 @@ definitions:
         type: string
       Total_time:
         type: string
+    type: object
+  types.CategoryRecipesResponse:
+    properties:
+      category:
+        $ref: '#/definitions/models.Category'
+      recipes:
+        items:
+          $ref: '#/definitions/models.Recipe'
+        type: array
+    type: object
+  types.OriginRecipesResponse:
+    properties:
+      origin:
+        $ref: '#/definitions/models.Origin'
+      recipes:
+        items:
+          $ref: '#/definitions/models.Recipe'
+        type: array
     type: object
 host: localhost:8080
 info:
@@ -203,6 +212,39 @@ paths:
       summary: Get recipe by id
       tags:
       - recipes
+  /recipes/category/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Get all recipes paginated by its category
+      parameters:
+      - description: Category Slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: OrderBy
+        in: query
+        name: orderBy
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.CategoryRecipesResponse'
+      summary: Get all recipes by Categories
+      tags:
+      - recipes
   /recipes/origin/{slug}:
     get:
       consumes:
@@ -228,7 +270,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handlers.Response'
+            $ref: '#/definitions/types.OriginRecipesResponse'
       summary: Get all recipes by Origins
       tags:
       - recipes

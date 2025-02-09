@@ -12,20 +12,21 @@ import (
 	"github.com/harisw/wenakkGoApi/pkg/types"
 )
 
-// GetRecipesByOrigin godoc
-// @Summary Get all recipes by Origins
-// @Description Get all recipes paginated by its origin
+// GetRecipesByCategory godoc
+// @Summary Get all recipes by Categories
+// @Description Get all recipes paginated by its category
 // @Tags recipes
 // @Accept json
 // @Produce json
-// @Param slug path string true "Origin Slug"
+// @Param slug path string true "Category Slug"
 // @Param page query int false "Page"
 // @Param limit query int false "Limit"
-// @Success 200 {object} types.OriginRecipesResponse
-// @Router /recipes/origin/{slug} [get]
-func (h handler) GetRecipesByOrigin(w http.ResponseWriter, r *http.Request) {
+// @Param orderBy query string false "OrderBy"
+// @Success 200 {object} types.CategoryRecipesResponse
+// @Router /recipes/category/{slug} [get]
+func (h handler) GetRecipesByCategory(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	originSlug := vars["slug"]
+	categorySlug := vars["slug"]
 	pagination, ok := r.Context().Value("pagination").(middlewares.Pagination)
 	if !ok {
 		log.Println("Failed to retrieve pagination from middleware")
@@ -35,28 +36,33 @@ func (h handler) GetRecipesByOrigin(w http.ResponseWriter, r *http.Request) {
 
 	limit := pagination.Limit
 	offset := pagination.Offset
+	orderBy := pagination.OrderBy
 
-	result, err := h.DB.Query(queries.GetOriginBySlug, originSlug)
+	result, err := h.DB.Query(queries.GetCategoryBySlug, categorySlug)
 	if err != nil {
-		log.Println("Error getting origin")
+		log.Println("Error getting category")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
-	var origin models.Origin
+	defer result.Close()
+
+	var category models.Category
 	for result.Next() {
-		err = result.Scan(&origin.Id, &origin.Name, &origin.Slug)
+		err = result.Scan(&category.Id, &category.Name, &category.Img, &category.Slug)
 		if err != nil {
-			log.Println("failed to scan origin ", err)
+			log.Println("failed to scan category ", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 	}
-
-	results, err := h.DB.Query(queries.GetRecipesWithRelationsByOrigin, &origin.Id,
-		limit, offset)
+	results, err := h.DB.Query(queries.GetRecipesWithRelationsByCategory,
+		&category.Id, orderBy, limit, offset)
 	if err != nil {
 		log.Println("Error querying recipes ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	defer results.Close()
 	var recipes = make([]models.Recipe, 0)
 	for results.Next() {
 		var recipe models.Recipe
@@ -73,9 +79,9 @@ func (h handler) GetRecipesByOrigin(w http.ResponseWriter, r *http.Request) {
 		}
 		recipes = append(recipes, recipe)
 	}
-	response := types.OriginRecipesResponse{
-		Origin:  origin,
-		Recipes: recipes,
+	response := types.CategoryRecipesResponse{
+		Category: category,
+		Recipes:  recipes,
 	}
 	helpers.RespondJSON(w, http.StatusOK, response)
 }

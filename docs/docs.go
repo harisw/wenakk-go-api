@@ -179,6 +179,56 @@ const docTemplate = `{
                 }
             }
         },
+        "/recipes/category/{slug}": {
+            "get": {
+                "description": "Get all recipes paginated by its category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "recipes"
+                ],
+                "summary": "Get all recipes by Categories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category Slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "OrderBy",
+                        "name": "orderBy",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.CategoryRecipesResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/recipes/origin/{slug}": {
             "get": {
                 "description": "Get all recipes paginated by its origin",
@@ -217,7 +267,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.Response"
+                            "$ref": "#/definitions/types.OriginRecipesResponse"
                         }
                     }
                 }
@@ -257,20 +307,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.Response": {
-            "type": "object",
-            "properties": {
-                "origin": {
-                    "$ref": "#/definitions/models.Origin"
-                },
-                "recipes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Recipe"
-                    }
-                }
-            }
-        },
         "models.Category": {
             "type": "object",
             "properties": {
@@ -355,6 +391,34 @@ const docTemplate = `{
                 },
                 "Total_time": {
                     "type": "string"
+                }
+            }
+        },
+        "types.CategoryRecipesResponse": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "$ref": "#/definitions/models.Category"
+                },
+                "recipes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Recipe"
+                    }
+                }
+            }
+        },
+        "types.OriginRecipesResponse": {
+            "type": "object",
+            "properties": {
+                "origin": {
+                    "$ref": "#/definitions/models.Origin"
+                },
+                "recipes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Recipe"
+                    }
                 }
             }
         }
