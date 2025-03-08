@@ -1,17 +1,16 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
-func Connect() *sql.DB {
+func Connect() *sqlx.DB {
 	_ = godotenv.Load()
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
@@ -25,11 +24,7 @@ func Connect() *sql.DB {
 	}
 	connInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, portInt, user, password, dbname)
 
-	db, err := sql.Open("postgres", connInfo)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = db.Ping()
+	db, err := sqlx.Connect("postgres", connInfo)
 	if err != nil {
 		panic(err)
 	}
@@ -38,8 +33,6 @@ func Connect() *sql.DB {
 	return db
 }
 
-func CloseConnection(db *sql.DB) {
+func CloseConnection(db *sqlx.DB) {
 	defer db.Close()
 }
-
-//todo: Implement CreateTable method

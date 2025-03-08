@@ -2,6 +2,8 @@ basePath: /
 definitions:
   models.Category:
     properties:
+      Count:
+        type: integer
       Img:
         type: string
       Name:
@@ -11,70 +13,61 @@ definitions:
       id:
         type: integer
     type: object
-  models.Origin:
-    properties:
-      Id:
-        type: integer
-      Name:
-        type: string
-      Slug:
-        type: string
-    type: object
   models.Recipe:
     properties:
-      Calories:
+      authorName:
+        type: string
+      calories:
         type: number
-      Category:
-        $ref: '#/definitions/models.Category'
-      Date_published:
-        type: string
-      Description:
-        type: string
-      Id:
-        type: integer
-      Images:
-        example: '{"key":"value"}'
-        type: string
-      Ingredients:
-        type: string
-      Instructions:
-        example: '{"key":"value"}'
-        type: string
-      Keywords:
-        example: '{"key":"value"}'
-        type: string
-      Name:
-        type: string
-      Origin:
-        $ref: '#/definitions/models.Origin'
-      Protein:
+      carbohydrates:
         type: number
-      Rating:
-        type: number
-      Recipe_id:
-        type: integer
-      Recipe_yield:
-        type: string
-      Total_time:
-        type: string
-    type: object
-  types.CategoryRecipesResponse:
-    properties:
       category:
         $ref: '#/definitions/models.Category'
-      recipes:
-        items:
-          $ref: '#/definitions/models.Recipe'
-        type: array
-    type: object
-  types.OriginRecipesResponse:
-    properties:
-      origin:
-        $ref: '#/definitions/models.Origin'
-      recipes:
-        items:
-          $ref: '#/definitions/models.Recipe'
-        type: array
+      cholesterol:
+        type: number
+      datePublished:
+        type: string
+      description:
+        type: string
+      externalId:
+        type: integer
+      fat:
+        type: number
+      fiber:
+        type: number
+      id:
+        type: integer
+      images:
+        example: '{"key":"value"}'
+        type: string
+      ingredientQty:
+        example: '{"key":"value"}'
+        type: string
+      ingredients:
+        example: '{"key":"value"}'
+        type: string
+      instructions:
+        example: '{"key":"value"}'
+        type: string
+      name:
+        type: string
+      portions:
+        type: string
+      protein:
+        type: number
+      rating:
+        type: number
+      slug:
+        type: string
+      sodium:
+        type: number
+      sugar:
+        type: number
+      tags:
+        example: '{"key":"value"}'
+        type: string
+      totalTime:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -127,44 +120,6 @@ paths:
       summary: Get category by slug
       tags:
       - categories
-  /origins:
-    get:
-      consumes:
-      - application/json
-      description: Get all origins
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Origin'
-            type: array
-      summary: Get all origins
-      tags:
-      - origins
-  /origins/{slug}:
-    get:
-      consumes:
-      - application/json
-      description: Get origin by slug
-      parameters:
-      - description: Origin Slug
-        in: path
-        name: slug
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Origin'
-      summary: Get origin by slug
-      tags:
-      - origins
   /recipes:
     get:
       consumes:
@@ -210,68 +165,6 @@ paths:
           schema:
             $ref: '#/definitions/models.Recipe'
       summary: Get recipe by id
-      tags:
-      - recipes
-  /recipes/category/{slug}:
-    get:
-      consumes:
-      - application/json
-      description: Get all recipes paginated by its category
-      parameters:
-      - description: Category Slug
-        in: path
-        name: slug
-        required: true
-        type: string
-      - description: Page
-        in: query
-        name: page
-        type: integer
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: OrderBy
-        in: query
-        name: orderBy
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.CategoryRecipesResponse'
-      summary: Get all recipes by Categories
-      tags:
-      - recipes
-  /recipes/origin/{slug}:
-    get:
-      consumes:
-      - application/json
-      description: Get all recipes paginated by its origin
-      parameters:
-      - description: Origin Slug
-        in: path
-        name: slug
-        required: true
-        type: string
-      - description: Page
-        in: query
-        name: page
-        type: integer
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/types.OriginRecipesResponse'
-      summary: Get all recipes by Origins
       tags:
       - recipes
 swagger: "2.0"

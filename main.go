@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,21 +10,19 @@ import (
 	"github.com/harisw/wenakkGoApi/pkg/db"
 	"github.com/harisw/wenakkGoApi/pkg/handlers"
 	"github.com/harisw/wenakkGoApi/pkg/middlewares"
+	"github.com/jmoiron/sqlx"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-func handleRequest(DB *sql.DB) {
-	h := handlers.New(DB)
+func handleRequest(db *sqlx.DB) {
+	h := handlers.New(db)
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(middlewares.PaginationMiddleware)
 	router.HandleFunc("/", homePage)
-	router.HandleFunc("/origins", h.GetAllOrigins).Methods("GET")
-	router.HandleFunc("/origins/{slug}", h.GetOrigin).Methods("GET")
 	router.HandleFunc("/categories", h.GetAllCategories).Methods("GET")
 	router.HandleFunc("/categories/{slug}", h.GetCategory).Methods("GET")
 	router.HandleFunc("/recipes", h.GetAllRecipes).Methods("GET")
-	router.HandleFunc("/recipes/origin/{slug}", h.GetRecipesByOrigin).Methods("GET")
-	router.HandleFunc("/recipes/category/{slug}", h.GetRecipesByCategory).Methods("GET")
+	// router.HandleFunc("/recipes/category/{slug}", h.GetRecipesByCategory).Methods("GET")
 	router.HandleFunc("/recipes/{recipeId}", h.GetRecipe).Methods("GET")
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 

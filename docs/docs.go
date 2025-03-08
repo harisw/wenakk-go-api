@@ -81,64 +81,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/origins": {
-            "get": {
-                "description": "Get all origins",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "origins"
-                ],
-                "summary": "Get all origins",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Origin"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/origins/{slug}": {
-            "get": {
-                "description": "Get origin by slug",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "origins"
-                ],
-                "summary": "Get origin by slug",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Origin Slug",
-                        "name": "slug",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.Origin"
-                        }
-                    }
-                }
-            }
-        },
         "/recipes": {
             "get": {
                 "description": "Get all recipes",
@@ -174,100 +116,6 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.Recipe"
                             }
-                        }
-                    }
-                }
-            }
-        },
-        "/recipes/category/{slug}": {
-            "get": {
-                "description": "Get all recipes paginated by its category",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "recipes"
-                ],
-                "summary": "Get all recipes by Categories",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Category Slug",
-                        "name": "slug",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "OrderBy",
-                        "name": "orderBy",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.CategoryRecipesResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/recipes/origin/{slug}": {
-            "get": {
-                "description": "Get all recipes paginated by its origin",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "recipes"
-                ],
-                "summary": "Get all recipes by Origins",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Origin Slug",
-                        "name": "slug",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/types.OriginRecipesResponse"
                         }
                     }
                 }
@@ -310,6 +158,9 @@ const docTemplate = `{
         "models.Category": {
             "type": "object",
             "properties": {
+                "Count": {
+                    "type": "integer"
+                },
                 "Img": {
                     "type": "string"
                 },
@@ -324,101 +175,85 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Origin": {
-            "type": "object",
-            "properties": {
-                "Id": {
-                    "type": "integer"
-                },
-                "Name": {
-                    "type": "string"
-                },
-                "Slug": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Recipe": {
             "type": "object",
             "properties": {
-                "Calories": {
+                "authorName": {
+                    "type": "string"
+                },
+                "calories": {
                     "type": "number"
                 },
-                "Category": {
-                    "$ref": "#/definitions/models.Category"
-                },
-                "Date_published": {
-                    "type": "string"
-                },
-                "Description": {
-                    "type": "string"
-                },
-                "Id": {
-                    "type": "integer"
-                },
-                "Images": {
-                    "type": "string",
-                    "example": "{\"key\":\"value\"}"
-                },
-                "Ingredients": {
-                    "type": "string"
-                },
-                "Instructions": {
-                    "type": "string",
-                    "example": "{\"key\":\"value\"}"
-                },
-                "Keywords": {
-                    "type": "string",
-                    "example": "{\"key\":\"value\"}"
-                },
-                "Name": {
-                    "type": "string"
-                },
-                "Origin": {
-                    "$ref": "#/definitions/models.Origin"
-                },
-                "Protein": {
+                "carbohydrates": {
                     "type": "number"
                 },
-                "Rating": {
-                    "type": "number"
-                },
-                "Recipe_id": {
-                    "type": "integer"
-                },
-                "Recipe_yield": {
-                    "type": "string"
-                },
-                "Total_time": {
-                    "type": "string"
-                }
-            }
-        },
-        "types.CategoryRecipesResponse": {
-            "type": "object",
-            "properties": {
                 "category": {
                     "$ref": "#/definitions/models.Category"
                 },
-                "recipes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Recipe"
-                    }
-                }
-            }
-        },
-        "types.OriginRecipesResponse": {
-            "type": "object",
-            "properties": {
-                "origin": {
-                    "$ref": "#/definitions/models.Origin"
+                "cholesterol": {
+                    "type": "number"
                 },
-                "recipes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Recipe"
-                    }
+                "datePublished": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "externalId": {
+                    "type": "integer"
+                },
+                "fat": {
+                    "type": "number"
+                },
+                "fiber": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "images": {
+                    "type": "string",
+                    "example": "{\"key\":\"value\"}"
+                },
+                "ingredientQty": {
+                    "type": "string",
+                    "example": "{\"key\":\"value\"}"
+                },
+                "ingredients": {
+                    "type": "string",
+                    "example": "{\"key\":\"value\"}"
+                },
+                "instructions": {
+                    "type": "string",
+                    "example": "{\"key\":\"value\"}"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "portions": {
+                    "type": "string"
+                },
+                "protein": {
+                    "type": "number"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "sodium": {
+                    "type": "number"
+                },
+                "sugar": {
+                    "type": "number"
+                },
+                "tags": {
+                    "type": "string",
+                    "example": "{\"key\":\"value\"}"
+                },
+                "totalTime": {
+                    "type": "string"
                 }
             }
         }

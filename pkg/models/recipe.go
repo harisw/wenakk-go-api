@@ -1,25 +1,34 @@
 package models
 
 import (
-	"encoding/json"
 	"time"
+
+	t "github.com/harisw/wenakkGoApi/pkg/types"
 )
 
 type Recipe struct {
-	Id            int64           `json:"Id"`
-	Category      Category        `json:"Category"`
-	Origin        Origin          `json:"Origin"`
-	Name          string          `json:"Name"`
-	TotalTime     string          `json:"Total_time"`
-	DatePublished time.Time       `json:"Date_published"`
-	Description   string          `json:"Description"`
-	Images        json.RawMessage `json:"Images" swaggertype:"string" example:"{\"key\":\"value\"}"`
-	Keywords      json.RawMessage `json:"Keywords" swaggertype:"string" example:"{\"key\":\"value\"}"`
-	Rating        float32         `json:"Rating"`
-	Calories      float32         `json:"Calories"`
-	Protein       float32         `json:"Protein"`
-	RecipeYield   *string         `json:"Recipe_yield"`
-	Instructions  json.RawMessage `json:"Instructions" swaggertype:"string" example:"{\"key\":\"value\"}"`
-	RecipeId      int64           `json:"Recipe_id"`
-	Ingredients   *string         `json:"Ingredients"`
+	Id            int64        `db:"id" json:"id"`
+	Category      Category     `db:"category" json:"category"`
+	AuthorName    t.NullString `db:"author_name" json:"author_name"`
+	Name          string       `db:"name" json:"name"`
+	TotalTime     t.NullString `db:"total_time" json:"total_time"`
+	DatePublished time.Time    `db:"date_published" json:"date_published"`
+	Description   t.NullString `db:"description" json:"description"`
+	Rating        t.NullFloat  `db:"rating" json:"rating"`
+	Calories      t.NullFloat  `db:"calories" json:"calories"`
+	Fat           t.NullFloat  `db:"fat" json:"fat"`
+	Cholesterol   t.NullFloat  `db:"cholesterol" json:"cholesterol"`
+	Sodium        t.NullFloat  `db:"sodium" json:"sodium"`
+	Carbohydrate  t.NullFloat  `db:"carbohydrate" json:"carbohydrate"`
+	Fiber         t.NullFloat  `db:"fiber" json:"fiber"`
+	Sugar         t.NullFloat  `db:"sugar" json:"sugar"`
+	Protein       t.NullFloat  `db:"protein" json:"protein"`
+	Portions      t.NullString `db:"portions" json:"portions"`
+	Tags          t.JSONArr    `db:"tags" json:"tags" swaggertype:"string" example:"{\"key\":\"value\"}"`
+	Instructions  t.JSONArr    `db:"instructions" json:"instructions" swaggertype:"string" example:"{\"key\":\"value\"}"`
+	Images        t.JSONArr    `db:"images" json:"images" swaggertype:"string" example:"{\"key\":\"value\"}"`
+	IngredientQty t.JSONArr    `db:"ingredient_qty" json:"ingredient_qty" swaggertype:"string" example:"{\"key\":\"value\"}"`
+	Ingredients   t.JSONArr    `db:"ingredients" json:"ingredients" swaggertype:"string" example:"{\"key\":\"value\"}"`
+	ExternalId    int64        `db:"external_id" json:"external_id"`
+	Slug          string       `db:"slug" json:"slug"`
 }

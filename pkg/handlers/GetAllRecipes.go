@@ -20,7 +20,7 @@ import (
 // @Param limit query int false "Limit"
 // @Success 200 {array} models.Recipe
 // @Router /recipes [get]
-func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
+func (h Handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 
 	pagination, ok := r.Context().Value("pagination").(middlewares.Pagination)
 	if !ok {
@@ -32,21 +32,16 @@ func (h handler) GetAllRecipes(w http.ResponseWriter, r *http.Request) {
 	limit := pagination.Limit
 	offset := pagination.Offset
 
-	results, err := h.DB.Query(queries.GetRecipesWithRelations, limit, offset)
+	rows, err := h.DB.Queryx(queries.GetRecipesWithRelations, limit, offset)
 	if err != nil {
 		log.Println("Error querying recipes ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	var recipes = make([]models.Recipe, 0)
-	for results.Next() {
+	var recipes []models.Recipe
+	for rows.Next() {
 		var recipe models.Recipe
-		err = results.Scan(&recipe.Id, &recipe.Category.Name, &recipe.Category.Slug,
-			&recipe.Origin.Name, &recipe.Origin.Slug,
-			&recipe.Name, &recipe.TotalTime, &recipe.DatePublished, &recipe.Description,
-			&recipe.Images, &recipe.Keywords, &recipe.Rating, &recipe.Calories,
-			&recipe.Protein, &recipe.RecipeYield, &recipe.Instructions, &recipe.RecipeId,
-			&recipe.Ingredients)
+		err = rows.StructScan(&recipe)
 		if err != nil {
 			log.Println("failed to scan", err)
 			w.WriteHeader(http.StatusInternalServerError)

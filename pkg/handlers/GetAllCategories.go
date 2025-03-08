@@ -17,19 +17,19 @@ import (
 // @Produce  json
 // @Success 200 {array} models.Category
 // @Router /categories [get]
-func (h handler) GetAllCategories(w http.ResponseWriter, r *http.Request) {
+func (h Handler) GetAllCategories(w http.ResponseWriter, r *http.Request) {
 
-	results, err := h.DB.Query(queries.GetAllCategories)
+	rows, err := h.DB.Queryx(queries.GetAllCategories)
 	if err != nil {
 		log.Println("Error querying categories ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	var categories = make([]models.Category, 0)
-	for results.Next() {
+	var categories []models.Category
+	for rows.Next() {
 		var category models.Category
-		err = results.Scan(&category.Id, &category.Name, &category.Img, &category.Slug)
+		err = rows.StructScan(&category)
 		if err != nil {
 			log.Println("failed to scan", err)
 			w.WriteHeader(http.StatusInternalServerError)
