@@ -22,8 +22,8 @@ func handleRequest(db *sqlx.DB) {
 	router.HandleFunc("/categories", h.GetAllCategories).Methods("GET")
 	router.HandleFunc("/categories/{slug}", h.GetCategory).Methods("GET")
 	router.HandleFunc("/recipes", h.GetAllRecipes).Methods("GET")
-	// router.HandleFunc("/recipes/category/{slug}", h.GetRecipesByCategory).Methods("GET")
-	router.HandleFunc("/recipes/{recipeId}", h.GetRecipe).Methods("GET")
+	router.HandleFunc("/recipes/category/{slug}", h.GetRecipesByCategory).Methods("GET")
+	router.HandleFunc("/recipes/{slug}", h.GetRecipe).Methods("GET")
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	log.Fatal(http.ListenAndServe("127.0.0.1:8080", router))

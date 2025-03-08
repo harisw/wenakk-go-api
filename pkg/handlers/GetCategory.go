@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -24,21 +23,17 @@ func (h Handler) GetCategory(w http.ResponseWriter, r *http.Request) {
 	slug := vars["slug"]
 
 	var category models.Category
-	err := h.DB.Select(&category, queries.GetCategoryBySlug, slug)
+	err := h.DB.Get(&category, queries.GetCategoryBySlug, slug)
+
+	if helpers.HandleSQLError(err, "Failed to get category") {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	if err != nil {
-		log.Println("Error querying category ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	// var category models.Category
-	// for result.Next() {
-	// 	err = result.Scan(&category.Id, &category.Name, &category.Img, &category.Slug)
-	// 	if err != nil {
-	// 		log.Println("failed to scan", err)
-	// 		w.WriteHeader(http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// }
 	helpers.RespondJSON(w, http.StatusOK, category)
 }
